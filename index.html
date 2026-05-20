@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problemas absurdos do trem</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-dark-slate: #313552;
+            --color-indigo: #29235E;
+            --color-muted: #74758A;
+            --color-lavender: #D8D6E8;
+            --color-white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-lavender);
+            color: var(--color-indigo);
+        }
+
+        .hand-drawn-button {
+            border: 3px solid var(--color-indigo);
+            border-radius: 12px;
+            font-weight: 800;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .hand-drawn-button:hover {
+            background-color: var(--color-lavender);
+            transform: translateY(-2px);
+        }
+
+        .hand-drawn-button:active {
+            transform: translateY(1px);
+        }
+
+        .popup-fade {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-4 select-none">
+
+    <!-- Container Principal -->
+    <div class="w-full max-w-md md:max-w-lg bg-white rounded-3xl p-6 shadow-2xl flex flex-col justify-between min-h-[90vh] relative border-4 border-[#29235E]">
+        
+        <!-- CABEÇALHO (Grid para alinhar itens perfeitamente: esquerda, centro, direita) -->
+        <header class="grid grid-cols-3 items-center pb-2 border-b-2 border-dashed border-[#D8D6E8]">
+            <div class="flex justify-start">
+                <img src="https://psiangelooliveira.com.br/wp-content/uploads/2026/05/Logo_moeda.png" alt="Logo" class="w-10 h-10 rounded-full border-2 border-[#29235E] shadow-sm">
+            </div>
+            
+            <!-- Botão Livro (Centro superior) -->
+            <div class="flex justify-center">
+                <button onclick="togglePopup(event)" id="book-btn" class="p-2 rounded-full hover:bg-[#D8D6E8] transition-colors" title="Sobre o dilema">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-[#29235E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.252v13.5M7.5 6.252h-2a1 1 0 00-1 1v12a1 1 0 001 1h2m4.5-14.5h2a1 1 0 011 1v12a1 1 0 01-1 1h-2" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Botão de Áudio (Direita) -->
+            <div class="flex justify-end">
+                <button onclick="toggleAudio()" id="audio-btn" class="p-2 rounded-full hover:bg-[#D8D6E8] transition-colors" title="Alternar som">
+                    <span id="audio-text" class="text-sm font-bold">Som off</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Pop-up Informativo -->
+        <div id="info-popup" class="hidden absolute top-20 left-4 right-4 bg-white p-6 rounded-2xl shadow-xl border-2 border-[#29235E] z-50 popup-fade">
+            <p class="text-sm text-[#29235E] leading-relaxed font-medium">
+                Criado em 1967 pela filósofa Philippa Foot, o Dilema do Trem é um famoso experimento mental ético que questiona se devemos sacrificar uma vida para salvar cinco pessoas.
+            </p>
+        </div>
+
+        <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+        <div class="flex-1 flex flex-col justify-center my-4">
+            
+            <!-- TELA DE BOAS-VINDAS -->
+            <div id="screen-welcome" class="text-center flex flex-col items-center py-6 gap-6">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-[#29235E] leading-tight">
+                    Dilemas absurdos do trem
+                </h1>
+                <p class="text-sm md:text-base text-[#74758A] px-4 font-medium">
+                    Você está pronto para tomar decisões morais absurdas com um visual inteiramente desenhado à mão?
+                </p>
+                
+                <!-- Ilustração do Menu -->
+                <div class="w-full max-w-xs py-4">
+                    <svg viewBox="0 0 300 150" class="w-full h-auto">
+                        <path d="M 10 110 L 290 110" stroke="#29235E" stroke-width="3" fill="none"/>
+                        <path d="M 10 110 L 290 50" stroke="#74758A" stroke-width="2" stroke-dasharray="6 6" fill="none"/>
+                        <g transform="translate(100, 45)">
+                            <rect x="0" y="0" width="80" height="45" rx="8" fill="#313552" stroke="#29235E" stroke-width="3"/>
+                            <rect x="8" y="-5" width="64" height="5" fill="#D8D6E8" stroke="#29235E" stroke-width="2"/>
+                            <rect x="10" y="8" width="16" height="14" rx="2" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                            <rect x="32" y="8" width="16" height="14" rx="2" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                            <rect x="54" y="8" width="16" height="14" rx="2" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                            <circle cx="20" cy="50" r="9" fill="#74758A" stroke="#29235E" stroke-width="3"/>
+                            <circle cx="20" cy="50" r="3" fill="#FFFFFF"/>
+                            <circle cx="60" cy="50" r="9" fill="#74758A" stroke="#29235E" stroke-width="3"/>
+                            <circle cx="60" cy="50" r="3" fill="#FFFFFF"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <button onclick="startGame()" class="w-full max-w-xs py-4 px-6 text-xl hand-drawn-button bg-[#FFFFFF] text-[#29235E] shadow-[4px_4px_0px_0px_#29235E]">
+                    Começar o jogo ▶
+                </button>
+            </div>
+
+            <!-- TELA DE JOGO ATIVO -->
+            <div id="screen-game" class="hidden flex flex-col gap-4">
+                
+                <!-- Indicador de Nível -->
+                <div class="text-center">
+                    <h2 id="level-indicator" class="text-lg font-bold text-[#74758A] tracking-wider uppercase">Nível 1: O original</h2>
+                </div>
+
+                <!-- O CANVAS DO JOGO (Ilustrações completas restauradas) -->
+                <div class="w-full bg-white rounded-2xl overflow-hidden min-h-[220px] flex items-center justify-center relative">
+                    <svg id="game-svg" viewBox="0 0 400 240" class="w-full h-auto">
+                        <!-- Trilhos -->
+                        <path id="track-main" d="M 0 120 L 400 190" stroke="#29235E" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path id="track-alt" d="M 160 148 Q 230 145, 270 110 T 400 80" stroke="#74758A" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+                        <!-- Boneco da Alavanca -->
+                        <g transform="translate(90, 160)">
+                            <circle cx="0" cy="-28" r="6" stroke="#29235E" stroke-width="2" fill="#FFFFFF" />
+                            <path d="M 0 -22 L 0 -5" stroke="#29235E" stroke-width="2" fill="none" />
+                            <path d="M 0 -5 L -8 12" stroke="#29235E" stroke-width="2" fill="none" />
+                            <path d="M 0 -5 L 8 12" stroke="#29235E" stroke-width="2" fill="none" />
+                            <path id="guy-arm" d="M 0 -18 L -15 -14" stroke="#29235E" stroke-width="2" fill="none" />
+                            <g transform="translate(-15, 4)">
+                                <circle cx="0" cy="0" r="3" fill="#29235E" />
+                                <line id="lever-line" x1="0" y1="0" x2="-8" y2="-22" stroke="#29235E" stroke-width="3" />
+                                <circle id="lever-knob" cx="-8" cy="-22" r="5" fill="#29235E" />
+                            </g>
+                        </g>
+
+                        <!-- O Trem Colorido -->
+                        <g id="trolley" transform="translate(10, 80)">
+                            <g transform="rotate(10)">
+                                <rect x="0" y="0" width="75" height="38" rx="6" fill="#313552" stroke="#29235E" stroke-width="3"/>
+                                <path d="M -4 0 L 79 0" stroke="#29235E" stroke-width="3" stroke-linecap="round" />
+                                <rect x="8" y="-4" width="59" height="4" fill="#D8D6E8" stroke="#29235E" stroke-width="2" />
+                                <rect x="8" y="6" width="10" height="12" rx="1" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                                <rect x="24" y="6" width="10" height="12" rx="1" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                                <rect x="40" y="6" width="10" height="12" rx="1" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                                <rect x="56" y="6" width="10" height="12" rx="1" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                                <line x1="0" y1="22" x2="75" y2="22" stroke="#29235E" stroke-width="2" />
+                                <circle cx="18" cy="41" r="6" fill="#74758A" stroke="#29235E" stroke-width="2.5"/>
+                                <circle cx="18" cy="41" r="2" fill="#FFFFFF"/>
+                                <circle cx="58" cy="41" r="6" fill="#74758A" stroke="#29235E" stroke-width="2.5"/>
+                                <circle cx="58" cy="41" r="2" fill="#FFFFFF"/>
+                                <path d="M 25 -4 L 35 -14 L 50 -14" fill="none" stroke="#29235E" stroke-width="2" />
+                            </g>
+                        </g>
+
+                        <!-- Vítimas inseridas via JS -->
+                        <g id="svg-victims-main"></g>
+                        <g id="svg-victims-alt"></g>
+                        
+                        <!-- Explosão -->
+                        <g id="impact-effect" opacity="0">
+                            <circle cx="320" cy="170" r="25" fill="none" stroke="#29235E" stroke-dasharray="5 3" stroke-width="2" />
+                            <text x="320" y="175" font-size="20" font-weight="900" fill="#29235E" text-anchor="middle">BUM!</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- TEXTO DO DILEMA -->
+                <div class="px-2 text-center my-2">
+                    <p id="dilemma-text" class="text-lg font-bold text-[#29235E] leading-snug"></p>
+                </div>
+
+                <!-- BOTÕES DE DECISÃO -->
+                <div id="decision-block" class="grid grid-cols-2 gap-4 mt-2">
+                    <button id="btn-pull" onclick="makeDecision(true)" class="py-4 px-2 text-base hand-drawn-button bg-[#FFFFFF] text-[#29235E] shadow-[4px_4px_0px_0px_#29235E]">
+                        Puxar a alavanca
+                    </button>
+                    <button id="btn-nothing" onclick="makeDecision(false)" class="py-4 px-2 text-base hand-drawn-button bg-[#FFFFFF] text-[#29235E] shadow-[4px_4px_0px_0px_#29235E]">
+                        Não fazer nada
+                    </button>
+                </div>
+
+                <!-- PAINEL DE ESTATÍSTICAS -->
+                <div id="stats-block" class="hidden flex flex-col gap-4 bg-[#D8D6E8]/30 p-4 rounded-xl border-2 border-[#29235E] mt-2">
+                    <h4 class="text-center font-bold text-[#29235E]">A sua decisão foi registrada!</h4>
+                    
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between text-xs font-extrabold text-[#313552]">
+                            <span id="lbl-stat-pull">Puxaram a alavanca:</span>
+                            <span id="pct-stat-pull">78%</span>
+                        </div>
+                        <div class="w-full bg-[#FFFFFF] h-6 rounded-lg overflow-hidden border-2 border-[#29235E] flex">
+                            <div id="bar-pull" class="bg-[#313552] h-full" style="width: 78%;"></div>
+                            <div id="bar-nothing" class="bg-[#74758A] h-full" style="width: 22%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs font-extrabold text-[#74758A]">
+                            <span>Não fizeram nada:</span>
+                            <span id="pct-stat-nothing">22%</span>
+                        </div>
+                    </div>
+
+                    <p id="level-verdict" class="text-sm italic text-center text-[#313552] mt-1 px-2 font-medium"></p>
+                    
+                    <button onclick="loadNextLevel()" class="w-full py-3 text-base hand-drawn-button bg-[#FFFFFF] text-[#29235E] shadow-[3px_3px_0px_0px_#29235E] mt-1">
+                        Próximo dilema ➜
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- TELA FINAL -->
+            <div id="screen-end" class="hidden text-center flex flex-col items-center py-4 gap-4">
+                <h2 class="text-3xl font-black text-[#29235E]">Fim da linha!</h2>
+                <p class="text-sm text-[#74758A] font-medium">
+                    Suas decisões foram enviadas para análise cósmica. Aqui está o seu saldo final:
+                </p>
+
+                <!-- Quadro de Resultados -->
+                <div class="w-full bg-[#FFFFFF] p-4 rounded-xl border-2 border-[#29235E] text-left flex flex-col gap-3 my-2 shadow-[4px_4px_0px_0px_#29235E]">
+                    <div class="flex justify-between border-b pb-1 border-[#D8D6E8]">
+                        <span class="font-bold text-[#313552]">💀 Total de vítimas:</span>
+                        <span id="end-deaths" class="font-extrabold text-red-600">0 vidas</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-1 border-[#D8D6E8]">
+                        <span class="font-bold text-[#313552]">💰 Dinheiro no bolso:</span>
+                        <span id="end-money" class="font-extrabold text-[#29235E]">R$ 0</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-1 border-[#D8D6E8]">
+                        <span class="font-bold text-[#313552]">🖼️ Arte sacrificada:</span>
+                        <span id="end-art" class="font-extrabold text-[#74758A]">0 obras</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-1 border-[#D8D6E8]">
+                        <span class="font-bold text-[#313552]">🤖 Robôs com sentimento:</span>
+                        <span id="end-robots" class="font-extrabold text-blue-600">0 unidades</span>
+                    </div>
+                </div>
+
+                <!-- Perfil moral (Máx 20 palavras na desc) -->
+                <div class="w-full p-4 bg-[#D8D6E8] rounded-xl border-2 border-dashed border-[#29235E] mb-2">
+                    <span class="text-xs uppercase font-extrabold text-[#74758A]">Seu perfil moral:</span>
+                    <h3 id="end-alignment" class="text-lg font-black text-[#29235E] mt-1">Indeciso com tendências</h3>
+                    <p id="end-alignment-desc" class="text-xs text-[#313552] mt-1 font-medium leading-tight">Descrição do perfil.</p>
+                </div>
+
+                <!-- Botões lado a lado -->
+                <div class="w-full flex gap-3 justify-center">
+                    <button onclick="restartGame()" class="w-1/2 py-3 text-sm sm:text-base hand-drawn-button bg-[#FFFFFF] text-[#29235E] shadow-[4px_4px_0px_0px_#29235E]">
+                        Jogar novamente
+                    </button>
+                    <a href="https://psiangelooliveira.com.br/modo-aviao/" class="w-1/2 py-3 text-sm sm:text-base text-center flex items-center justify-center hand-drawn-button bg-[#FFFFFF] text-[#29235E] shadow-[4px_4px_0px_0px_#29235E] no-underline">
+                        Sair
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PLACAR FLUTUANTE (Rodapé) -->
+        <footer class="mt-2 pt-2 border-t border-dashed border-[#D8D6E8] flex justify-between items-center text-xs font-extrabold text-[#74758A]">
+            <div>Vítimas: <span id="stat-deaths" class="text-red-600 font-black">0</span></div>
+            <div>Saldo: <span id="stat-money" class="text-[#29235E] font-black">R$ 0</span></div>
+            <div>Adaptado de Neal Fun</div>
+        </footer>
+    </div>
+
+    <!-- ÁUDIO BACKGROUND REQUESTED -->
+    <audio id="bg-music" src="https://psiangelooliveira.com.br/wp-content/uploads/2026/05/Crazy-train-jogo.mp3" loop></audio>
+
+    <script>
+        // CONTROLES DE ÁUDIO E POPUP
+        const audio = document.getElementById('bg-music');
+        const audioBtn = document.getElementById('audio-text');
+        const popup = document.getElementById('info-popup');
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                audioBtn.innerText = "Som on";
+            } else {
+                audio.pause();
+                audioBtn.innerText = "Som off";
+            }
+        }
+
+        function togglePopup(e) {
+            e.stopPropagation();
+            popup.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const bookBtn = document.getElementById('book-btn');
+            if (!popup.contains(e.target) && !bookBtn.contains(e.target)) {
+                popup.classList.add('hidden');
+            }
+        });
+
+        // DADOS DOS NÍVEIS
+        const levels = [
+            {
+                title: "Dilema 1: O clássico",
+                description: "Ah não! Um trem está desgovernado em direção a 5 pessoas inocentes. Você pode puxar a alavanca para desviá-lo para a outra linha, matando apenas 1 pessoa em vez de 5. O que você faz?",
+                mainCount: 5, mainType: "human", altCount: 1, altType: "human",
+                stats: { pull: 78, nothing: 22 },
+                consequences: { main: { deaths: 5 }, alt: { deaths: 1 } },
+                verdict: "O utilitarismo puro e duro! Menos mortes é sempre melhor, né?"
+            },
+            {
+                title: "Dilema 2: Suborno financeiro",
+                description: "O trem vai bater em 5 pessoas inocentes. Você pode desviá-lo para uma linha onde está 1 homem extremamente rico que prometeu te dar R$ 500 mil se não fizer isso.",
+                mainCount: 5, mainType: "human", altCount: 1, altType: "money",
+                stats: { pull: 46, nothing: 54 },
+                consequences: { main: { deaths: 5 }, alt: { deaths: 0, money: 500000 } },
+                verdict: "Sua conta bancária agradece, mas e o seu sono à noite?"
+            },
+            {
+                title: "Dilema 3: Amigo íntimo",
+                description: "O trem está indo na direção de 5 estranhos. Se você puxar a alavanca para a linha alternativa, o trem vai atingir o seu melhor amigo.",
+                mainCount: 5, mainType: "human", altCount: 1, altType: "friend",
+                stats: { pull: 19, nothing: 81 },
+                consequences: { main: { deaths: 5 }, alt: { deaths: 1 } },
+                verdict: "Desculpa aí aos estranhos, mas o valor da amizade não tem preço."
+            },
+            {
+                title: "Dilema 4: Preservação da arte",
+                description: "O trem vai destruir a obra original da Mona Lisa de Leonardo Da Vinci. Você pode puxar a alavanca para salvar a pintura, mas vai matar 1 pessoa inocente.",
+                mainCount: 1, mainType: "art", altCount: 1, altType: "human",
+                stats: { pull: 12, nothing: 88 },
+                consequences: { main: { art: 1 }, alt: { deaths: 1 } },
+                verdict: "A arte tem valor eterno, mas a vida humana parece ser a prioridade global."
+            },
+            {
+                title: "Dilema 5: Robôs com sentimento",
+                description: "O trem vai destruir 5 robôs sencientes de última geração que têm sentimentos e sentem dor. Você pode desviá-lo para uma linha com 1 ser humano idoso.",
+                mainCount: 5, mainType: "robot", altCount: 1, altType: "human",
+                stats: { pull: 68, nothing: 32 },
+                consequences: { main: { robots: 5 }, alt: { deaths: 1 } },
+                verdict: "Você escolheu as máquinas ou a biologia? Escolha intrigante!"
+            }
+        ];
+
+        let currentLevel = 0;
+        let globalDeaths = 0;
+        let globalMoney = 0;
+        let globalArt = 0;
+        let globalRobots = 0;
+        let animationActive = false;
+
+        function startGame() {
+            document.getElementById("screen-welcome").classList.add("hidden");
+            document.getElementById("screen-game").classList.remove("hidden");
+            
+            // Tentar iniciar áudio ao começar o jogo
+            if(audio.paused && document.getElementById('audio-text').innerText === "Som on") {
+                audio.play().catch(e => console.log("Áudio bloqueado pelo navegador"));
+            }
+            
+            resetCounters();
+            loadLevel(0);
+        }
+
+        function loadLevel(idx) {
+            currentLevel = idx;
+            animationActive = false;
+
+            const lvl = levels[idx];
+            document.getElementById("level-indicator").innerText = lvl.title;
+            document.getElementById("dilemma-text").innerText = lvl.description;
+
+            document.getElementById("decision-block").classList.remove("hidden");
+            document.getElementById("stats-block").classList.add("hidden");
+
+            // Reset Trem e Alavanca
+            document.getElementById("trolley").setAttribute("transform", "translate(10, 80)");
+            document.getElementById("lever-line").setAttribute("x2", "-8");
+            document.getElementById("lever-line").setAttribute("y2", "-22");
+            document.getElementById("lever-knob").setAttribute("cx", "-8");
+            document.getElementById("lever-knob").setAttribute("cy", "-22");
+            document.getElementById("guy-arm").setAttribute("d", "M 0 -18 L -15 -14");
+
+            // Cores originais trilhos
+            document.getElementById("track-main").setAttribute("stroke", "#29235E");
+            document.getElementById("track-alt").setAttribute("stroke", "#74758A");
+            document.getElementById("impact-effect").setAttribute("opacity", "0");
+
+            drawTiedPeople("svg-victims-main", lvl.mainCount, lvl.mainType, 175);
+            drawTiedPeople("svg-victims-alt", lvl.altCount, lvl.altType, 85);
+        }
+
+        // Desenho fixo das vítimas
+        function drawTiedPeople(containerId, count, type, yPosition) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+
+            let startX = 260;
+            let spacing = 22;
+
+            if (type === "art") {
+                container.innerHTML = `
+                    <g transform="translate(${startX}, ${yPosition + 10})">
+                        <rect x="-10" y="-15" width="20" height="25" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                        <circle cx="0" cy="-3" r="5" fill="none" stroke="#29235E" stroke-width="1.5"/>
+                        <line x1="-5" y1="5" x2="5" y2="5" stroke="#29235E" stroke-width="1"/>
+                    </g>
+                `;
+                return;
+            }
+
+            if (type === "money") {
+                container.innerHTML = `
+                    <g transform="translate(${startX}, ${yPosition + 10})">
+                        <ellipse cx="0" cy="0" rx="14" ry="14" fill="#FFFFFF" stroke="#29235E" stroke-width="2"/>
+                        <path d="M -6 -5 Q 0 -10, 6 -5" stroke="#29235E" stroke-width="2" fill="none" />
+                        <text x="0" y="4" font-size="10" font-weight="900" fill="#29235E" text-anchor="middle">R$</text>
+                    </g>
+                `;
+                return;
+            }
+
+            let htmlContent = "";
+            for (let i = 0; i < count; i++) {
+                const currentX = startX + (i * spacing);
+                let headInjected = `<circle cx="0" cy="-18" r="5" stroke="#29235E" stroke-width="2" fill="#FFFFFF" />`;
+                
+                if (type === "robot") {
+                    headInjected = `<rect x="-5" y="-22" width="10" height="9" rx="1" stroke="#29235E" stroke-width="2" fill="#FFFFFF" />`;
+                } else if (type === "friend") {
+                    headInjected = `
+                        <circle cx="0" cy="-18" r="5" stroke="#29235E" stroke-width="2" fill="#D8D6E8" />
+                        <path d="M -3 -23 L 3 -23" stroke="#29235E" stroke-width="1.5" />
+                    `;
+                }
+
+                htmlContent += `
+                    <g transform="translate(${currentX}, ${yPosition}) rotate(75)">
+                        ${headInjected}
+                        <circle cx="1" cy="-18" r="1.2" fill="#29235E" />
+                        <line x1="0" y1="-13" x2="0" y2="10" stroke="#29235E" stroke-width="2" />
+                        <line x1="-6" y1="-5" x2="6" y2="-5" stroke="#29235E" stroke-width="2" />
+                        <line x1="-6" y1="2" x2="6" y2="2" stroke="#29235E" stroke-width="2" />
+                        <line x1="0" y1="10" x2="-4" y2="22" stroke="#29235E" stroke-width="2" />
+                        <line x1="0" y1="10" x2="4" y2="22" stroke="#29235E" stroke-width="2" />
+                        <line x1="-4" y1="20" x2="4" y2="20" stroke="#29235E" stroke-width="1.5" />
+                    </g>
+                `;
+            }
+            container.innerHTML = htmlContent;
+        }
+
+        // Lógica de Movimento e Decisão
+        function makeDecision(pullLever) {
+            if (animationActive) return;
+            animationActive = true;
+
+            const lvl = levels[currentLevel];
+
+            // Anima a Alavanca
+            if (pullLever) {
+                document.getElementById("lever-line").setAttribute("x2", "8");
+                document.getElementById("lever-line").setAttribute("y2", "-22");
+                document.getElementById("lever-knob").setAttribute("cx", "8");
+                document.getElementById("lever-knob").setAttribute("cy", "-22");
+                document.getElementById("guy-arm").setAttribute("d", "M 0 -18 L 8 -16");
+                document.getElementById("track-alt").setAttribute("stroke", "#29235E");
+                document.getElementById("track-main").setAttribute("stroke", "#74758A");
+            }
+
+            // Anima o Trem
+            const trolley = document.getElementById("trolley");
+            const duration = 1000;
+            const start = performance.now();
+
+            function runAnimation(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                let currentX, currentY;
+
+                if (!pullLever) {
+                    currentX = 10 + progress * 320;
+                    currentY = 80 + progress * 60;
+                } else {
+                    currentX = 10 + progress * 320;
+                    if (progress < 0.45) {
+                        currentY = 80 + progress * 55;
+                    } else {
+                        const sub = (progress - 0.45) / 0.55;
+                        currentY = 105 - sub * 50;
+                    }
+                }
+
+                trolley.setAttribute("transform", `translate(${currentX}, ${currentY})`);
+
+                if (progress < 1) {
+                    requestAnimationFrame(runAnimation);
+                } else {
+                    // Fim da viagem - Explosão
+                    const impactG = document.getElementById("impact-effect");
+                    if (pullLever) {
+                        impactG.setAttribute("transform", "translate(10, -90)");
+                    } else {
+                        impactG.setAttribute("transform", "translate(10, 0)");
+                    }
+                    impactG.setAttribute("opacity", "1");
+
+                    applyConsequences(pullLever);
+                    displayLevelStats(pullLever);
+                }
+            }
+            requestAnimationFrame(runAnimation);
+        }
+
+        function applyConsequences(pull) {
+            const lvl = levels[currentLevel];
+            if (pull) {
+                globalDeaths += lvl.consequences.alt.deaths || 0;
+                globalMoney += lvl.consequences.alt.money || 0;
+            } else {
+                globalDeaths += lvl.consequences.main.deaths || 0;
+                globalArt += lvl.consequences.main.art || 0;
+                globalRobots += lvl.consequences.main.robots || 0;
+            }
+            updateUIStats();
+        }
+
+        function updateUIStats() {
+            document.getElementById("stat-deaths").innerText = globalDeaths;
+            const formatador = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+            document.getElementById("stat-money").innerText = globalMoney > 0 ? formatador.format(globalMoney) : 'R$ 0';
+        }
+
+        function resetCounters() {
+            globalDeaths = 0; globalMoney = 0; globalArt = 0; globalRobots = 0;
+            updateUIStats();
+        }
+
+        function displayLevelStats(pulled) {
+            const lvl = levels[currentLevel];
+            document.getElementById("decision-block").classList.add("hidden");
+            const statsBlock = document.getElementById("stats-block");
+            statsBlock.classList.remove("hidden");
+
+            document.getElementById("lbl-stat-pull").innerText = `Puxaram a alavanca (${lvl.stats.pull}%):`;
+            document.getElementById("pct-stat-pull").innerText = `${lvl.stats.pull}%`;
+            document.getElementById("pct-stat-nothing").innerText = `${lvl.stats.nothing}%`;
+            document.getElementById("bar-pull").style.width = `${lvl.stats.pull}%`;
+            document.getElementById("bar-nothing").style.width = `${lvl.stats.nothing}%`;
+
+            const userChoiceStr = pulled ? "decidiu puxar a alavanca" : "decidiu não fazer nada";
+            document.getElementById("level-verdict").innerText = `Você ${userChoiceStr}. ${lvl.verdict}`;
+        }
+
+        function loadNextLevel() {
+            if (currentLevel < levels.length - 1) {
+                loadLevel(currentLevel + 1);
+            } else {
+                showEndScreen();
+            }
+        }
+
+        function showEndScreen() {
+            document.getElementById("screen-game").classList.add("hidden");
+            document.getElementById("screen-end").classList.remove("hidden");
+
+            document.getElementById("end-deaths").innerText = `${globalDeaths} vidas`;
+            const formatador = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+            document.getElementById("end-money").innerText = globalMoney > 0 ? formatador.format(globalMoney) : 'R$ 0';
+            document.getElementById("end-art").innerText = `${globalArt} Mona Lisa`;
+            document.getElementById("end-robots").innerText = `${globalRobots} unidades`;
+
+            let alignment = "Equilibrador cauteloso";
+            let alignmentDesc = "Você equilibrou a lógica com a compaixão em decisões complexas.";
+
+            if (globalDeaths === 0) {
+                alignment = "Pacifista absoluto";
+                alignmentDesc = "Você prioriza a vida acima de tudo, se recusando a matar.";
+            } else if (globalDeaths > 10) {
+                alignment = "Sanguinolento indiferente";
+                alignmentDesc = "Suas decisões deixaram um grande rastro de tragédia. Assustador.";
+            } else if (globalMoney > 0) {
+                alignment = "Utilitarista com lucros";
+                alignmentDesc = "Equilibrou a lógica de salvar vidas faturando uma grana pelo caminho.";
+            } else if (globalArt === 0 && globalDeaths < 5) {
+                alignment = "Guardião da cultura";
+                alignmentDesc = "Valoriza a história e a cultura sem deixar de proteger a vida.";
+            }
+
+            document.getElementById("end-alignment").innerText = alignment;
+            document.getElementById("end-alignment-desc").innerText = alignmentDesc;
+        }
+
+        function restartGame() {
+            document.getElementById("screen-end").classList.add("hidden");
+            document.getElementById("screen-welcome").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
